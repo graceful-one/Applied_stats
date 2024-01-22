@@ -4,7 +4,7 @@ author: "Grace Randall"
 date: "2024-01-22"
 output: pdf_document
 ---
-##Setup 
+## Setup 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -73,10 +73,28 @@ c) The standard deviation of tree height is 3.31m. The standard deviation of tre
 
 ## Question 3
 
-```{r Q3}
+```{r Q3a}
 # a)
 
+ggplot(tree_data,aes(x = height, y = diameter))+
+  geom_point()+
+  xlab("Height (m)")+
+  ylab("Diameter (cm)")
 
+```
+
+b) I hypothesize that as tree height increases so does as well
+
+c) A linear regression with m=1 and b=2 would mean that as tree height increases by 1m the tree diameter would increase by approximately 1cm and that trees of 0m of height would have a diameter of 2cm.
+
+```{r Q3d}
+# d)
+
+ggplot(tree_data,aes(x = height, y = diameter))+
+  geom_abline(intercept = 2, slope = 1, color="lightblue",size=1)+
+  geom_point()+
+  xlab("Height (m)")+
+  ylab("Diameter (cm)")
 
 ```
 
