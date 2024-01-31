@@ -1,0 +1,11 @@
+---
+title: "Lab 3 problems"
+author: "Grace Randall"
+date: "2024-01-31"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+```
+

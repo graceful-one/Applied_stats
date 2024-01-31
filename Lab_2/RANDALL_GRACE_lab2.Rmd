@@ -1,0 +1,147 @@
+---
+title: "Lab 2 Problems"
+author: "Grace Randall"
+date: "2024-01-24"
+output: pdf_document
+---
+
+
+
+```{r setup, include=FALSE}
+library(ggplot2)
+afdat <- read.csv("/home/guest/applied_stats/Applied_stats/Lab_2/AfrPlots.csv", header = TRUE)
+```
+
+# Problem 1
+```{r Q1}
+# a)
+boxplot(afdat$MeanGr,
+        main = "Mean Growth",
+        xlab = "CM",
+        horizontal = TRUE
+        )
+hist(afdat$MeanGr, xlab = 'Mean Growth', main = 'Histogram of Mean Growth')
+
+# b)
+mean(afdat$MeanGr, na.rm = TRUE)
+median(afdat$MeanGr, na.rm = TRUE)
+var(afdat$MeanGr, na.rm = TRUE)
+sd(afdat$MeanGr, na.rm = TRUE)
+sd(afdat$MeanGr, na.rm = TRUE)/mean(afdat$MeanGr, na.rm = TRUE)
+```
+
+b) The mean of mean growth is 2.7cm. The median is 2.6cm. The variance is 0.80 square cm. The standard diviation is 0.89cm. the coefficient of variation is 0.33.
+
+# Problem 2
+```{r Q2}
+# 5 or less
+sum(dbinom(0:5, size = 20, prob = 0.5))
+# more than 5
+sum(dbinom(6:20, size = 20, prob = 0.5))
+
+n <- 20
+k <- 0:20
+p <- 0.5
+coinflipPD <- (factorial(n)/(factorial(k)*(factorial(n-k))))*(p^k)*(1-p)^(n-k)
+# 5 or less
+sum(coinflipPD[1:6])
+# more than 5
+sum(coinflipPD[7:21])
+
+```
+# Problem 3
+```{r Q3}
+#probability of getting more than 17 right
+sum(dbinom(17:20, size = 20, prob = 0.25))
+```
+
+# Problem 4
+```{r Q4}
+#a)
+l<-4 
+x<-9:13
+pd<-l^x/factorial(x)*exp(-l)
+sum(pd[1:5])
+
+#b)
+sum(dpois(x = 9:13, lambda = 4))
+
+#c)
+Dist<-dpois(x = 0:13, lambda = 4)
+x<-0:13
+
+plot(x, Dist, type="h",xlim = c(-1, 11), ylim = c(0, 0.5),
+las = 1, lwd = 2, col = "blue",
+ylab = "Probability", xlab = "Number of butterflies")
+points(x, Dist, pch = 16, cex = 1.2, col = "dark red")
+
+```
+
+# Question 5
+```{r Q5a}
+
+#a)
+# Define number of experiments
+nexp <- 1000
+sample_means_pres <- matrix(NA,nrow=nexp)
+
+# experiment
+for (i in 1:nexp){
+x <-rbinom(1000,1,0.3)
+sample_means_pres[i] <- mean(x)
+}
+#Plot
+sample_means_pres.df <- data.frame(means=sample_means_pres)
+
+pres <- ggplot(sample_means_pres.df,aes(means))+
+geom_histogram()+
+geom_vline(xintercept=0.3,color="red")
+
+pres
+
+```
+the sampling distribution seems to follow a normal distribution.
+
+```{r Q5b}
+#b)
+# Define number of experiments
+nexp <- 1000
+sample_means_num <- matrix(NA,nrow=nexp)
+
+# experiment
+for (i in 1:nexp){
+x <-rpois(1000,5)
+sample_means_num[i] <- mean(x)
+}
+#Plot
+sample_means_num.df <- data.frame(means=sample_means_num)
+
+num <- ggplot(sample_means_num.df,aes(means))+
+geom_histogram()+
+geom_vline(xintercept=5,color="red")
+
+num
+```
+the sampling distribution seems to follow a normal distribution.
+
+```{r Q5c}
+#c)
+# Define number of experiments
+nexp <- 1000
+sample_means_DBH <- matrix(NA,nrow=nexp)
+
+# experiment
+for (i in 1:nexp){
+x <-rnorm(1000,12,2)
+sample_means_DBH[i] <- mean(x)
+}
+#Plot
+sample_means_DBH.df <- data.frame(means=sample_means_DBH)
+
+DBH <- ggplot(sample_means_DBH.df,aes(means))+
+geom_histogram()+
+geom_vline(xintercept=12,color="red")
+
+DBH
+```
+the sampling distribution seems to follow a normal distribution.
