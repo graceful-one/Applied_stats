@@ -7,5 +7,50 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 
+dat <- read.csv("~/applied_stats/Applied_stats/Lab_2/AfrPlots.csv", header = T)
+attach(dat)
+
+```
+
+```{r P0}
+MeanGr[CensusNo == 2]
+MeanGr[31:60]
+
+MeanGr[!is.na(MeanGr)]
+MeanGr[is.na(MeanGr)==F]
+
+dat$MeanGr[dat$CensusNo == 2]
+
+dat[Trees > 400 & CensusNo == 2,]
+
+sort(ChaveMoist, decreasing = T)
+sort(ChaveMoist, decreasing = F)
+
+new.dat <- data.frame(a = factor(c("Hi", "Med", "Low", "Hi")),
+                      x = c("C","B","C","A"),
+                      y = c(24, 15, 22, 4))
+colnames(new.dat) <- c("A", "X", "Y")
+
+new.dat[order(new.dat$X), ]
+new.dat[order(new.dat$X, decreasing = T), ]
+new.dat[order(new.dat$A, new.dat$Y), ]
+dat[order(ChaveMoist),]
+dat[order(-CensusNo, BasalArea),]
+
+
+```
+
+## Problem 1
+```{r P1}
+
+qnorm(p = 0.90, mean = 4, sd = 1.4)
+
+pnorm(5, mean = 4, sd = 1.4)
+
+set.seed(1001)
+draw1 <- rnorm(12, mean = 4, sd = 1.4)
+sort(draw1)
+
+#2 are over 6 so it would be impared
 ```
 

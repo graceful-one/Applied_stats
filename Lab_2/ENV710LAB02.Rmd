@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup}
-knitr::opts_knit$set(root.dir = "C:/Users/mh471/Downloads/lab02")
+#knitr::opts_knit$set(root.dir = "C:/Users/mh471/Downloads/lab02")
 getwd()
 ```
 
