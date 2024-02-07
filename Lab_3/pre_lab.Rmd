@@ -1,0 +1,95 @@
+---
+title: "Lab 3 prelab"
+author: "Grace Randall"
+date: "2024-02-06"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+dat <- read.csv("~/applied_stats/Applied_stats/Lab_2/AfrPlots.csv", header = T)
+attach(dat)
+library(ggplot2)
+```
+
+```{r P0, eval=FALSE, include=FALSE}
+MeanGr[CensusNo == 2]
+MeanGr[31:60]
+
+MeanGr[!is.na(MeanGr)]
+MeanGr[is.na(MeanGr)==F]
+
+dat$MeanGr[dat$CensusNo == 2]
+
+dat[Trees > 400 & CensusNo == 2,]
+
+sort(ChaveMoist, decreasing = T)
+sort(ChaveMoist, decreasing = F)
+
+new.dat <- data.frame(a = factor(c("Hi", "Med", "Low", "Hi")),
+                      x = c("C","B","C","A"),
+                      y = c(24, 15, 22, 4))
+colnames(new.dat) <- c("A", "X", "Y")
+
+new.dat[order(new.dat$X), ]
+new.dat[order(new.dat$X, decreasing = T), ]
+new.dat[order(new.dat$A, new.dat$Y), ]
+dat[order(ChaveMoist),]
+dat[order(-CensusNo, BasalArea),]
+
+
+```
+
+```{r P1, eval=FALSE, include=FALSE}
+
+qnorm(p = 0.90, mean = 4, sd = 1.4)
+
+pnorm(5, mean = 4, sd = 1.4)
+
+set.seed(1001)
+draw1 <- rnorm(12, mean = 4, sd = 1.4)
+sort(draw1)
+
+#2 are over 6 so it would be impared
+```
+
+```{r p2, eval=FALSE, include=FALSE}
+set.seed(1001)
+h2o <- as.data.frame(matrix(rnorm(10*12, mean = 4, sd = 1.4), ncol = 12))
+## Create row labels, using paste and nrow
+paste(rep("Riv", nrow(h2o)), c(1:nrow(h2o)), sep = "")
+
+## Now assign it to the matrix using rownames
+rownames(h2o) <- paste(rep("Riv", nrow(h2o)), c(1:nrow(h2o)), sep = "")
+colnames(h2o) <- paste(rep("Obs", ncol(h2o)), c(1:ncol(h2o)), sep = "")
+
+h2o$Test <- rowSums(ifelse(h2o>6, 1, 0))
+
+length(h2o$Test[h2o$Test>1])
+
+```
+
+```{r p3, eval=FALSE, include=FALSE}
+set.seed(1001)
+sort(rnorm(12, mean = 4.5, sd = 1.4))
+
+x <- seq(-1, 10, length = 100)
+plot(x, dnorm(x, mean = 4, sd = 1.4), type = "l", col = "darkblue", lwd = 2,
+las = 1, xlab = "Pollutant values", ylab = "Probability")
+lines(x, dnorm(x, mean = 4.5, sd = 1.4), col = "red", lwd = 2)
+segments(4, 0, 4, dnorm(4, mean = 4, sd = 1.4), lty = 2, col = "darkblue")
+segments(4.5, 0, 4.5, dnorm(4, mean = 4, sd = 1.4), lty = 2, col = "red")
+```
+
+```{r p4, eval=FALSE, message=TRUE, warning=TRUE, include=FALSE}
+set.seed(1001)
+nobs <- 36
+too.many <- round(0.10 * nobs, digits = 0)
+h2o <- as.data.frame(matrix(rnorm(10*nobs, mean=4, sd=1.4),
+ncol= nobs))
+rownames(h2o) <- paste(rep("Riv", nrow(h2o)), c(1:nrow(h2o)), sep = "")
+colnames(h2o) <- paste(rep("Obs", ncol(h2o)), c(1:ncol(h2o)), sep = "")
+h2o$Test <- rowSums(ifelse(h2o>6, 1, 0))
+length(h2o$Test[h2o$Test>too.many])
+length(h2o$Test[h2o$Test>too.many])/10
+```
