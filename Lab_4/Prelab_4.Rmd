@@ -1,0 +1,46 @@
+---
+title: "Lab 4"
+author: "Grace Randall"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Create a vector to store results
+umeans <- numeric(10000)
+set.seed(1001)
+# Run the loop 10,000 times
+for (i in 1:10000){
+# Take the mean of a sample of 5 uniformly distributed numbers
+# and store it in the vector, means
+  umeans[i] <- mean(runif(5, min = 0, max = 10))
+}
+# Make a histogram of the 10,000 means
+hist(umeans, las = 1, main= "", xlab = "Sample means", col = 2)
+```
+
+```{r}
+hist(umeans, las = 1, main= "", xlab = "Sample means",
+col = 2, prob = TRUE)
+curve(dnorm(x, mean = mean(umeans), sd = sd(umeans)),
+add=T, col = "darkblue", lwd = 2)
+```
+
+```{r}
+h <- hist(umeans, prob = T, plot = F)
+# Set the range of the y-axis to go from 0 to the maximum density + 15%
+hist(umeans, las = 1, main= "", xlab = "Sample means",
+col = 2, prob = T, ylim = c(0, max(h$density)+ max(h$density)*0.15))
+curve(dnorm(x, mean = mean(umeans), sd = sd(umeans)),
+add=T, col = "darkblue", lwd = 2)
+```
+
+```{r}
+qqnorm(umeans, las=1)
+qqline(umeans)
+```
+
