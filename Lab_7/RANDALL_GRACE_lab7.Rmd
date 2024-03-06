@@ -1,0 +1,155 @@
+---
+title: "Lab 5"
+author: "Grace Randall"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+df  <-read.csv("~/applied_stats/Applied_stats/Lab_7/agb.csv", 
+               stringsAsFactors = T, header=T)
+df <- mutate(df, old_growth=growth)
+levels(df$old_growth) <- c(0,1)
+df$old_growth <-as.numeric(df$old_growth)-1
+
+```
+
+# Question 1
+```{r}
+lm1 <- lm(formula = agb ~ 1, data=df)
+summary(lm1)
+
+mean(df$agb)
+plotrix::std.error(df$agb) 
+```
+a) Beta 0 is equal to 410.7. This is the same as the mean of agb. 
+b) The standard error is 6.48 which is the same as the standard error of the sample mean.
+
+# Question 2
+```{r}
+lm2 <- lm(formula = agb ~ old_growth, data=df)
+summary(lm2)
+```
+a) Beta 0 is 363 which is the mean among new old_growth forests
+b) The difference in the mean between old growth and new growth forests is 93.7
+c) the value of the estimate for old growth forests is 93.7. 
+d) The value of the estimate of old growth forests is the difference between the average new growth and old growth forest above ground biomass, or the adjustment to the intercept needed for old growth forests.
+e) the null hypothesis of no difference in agb between old and new growth forests can be rejected with a p value of 2.15e-14
+f)
+```{r, fig.width = 6, fig.height = 4}
+ggplot(df, aes(x = growth, y = agb, color=growth)) +
+ geom_point(shape = 1) +
+   geom_hline(yintercept=c(363.469, 363.469+93.778),
+              linetype='dashed', 
+              color=c('coral', 'lightseagreen')) +
+   xlab("Growth Type") +
+   ylab(expression(paste("Above Ground Biomass, Mg ", ha^-1))) +
+  theme_bw()
+```
+
+# Question 3
+```{r}
+lm3 <- lm(formula = agb ~ basal_area, data=df)
+summary(lm3)
+
+mean_ba=mean(df$basal_area)
+df <- mutate(df, basal_area_centered=basal_area-mean_ba)
+
+lm3.5 <- lm(formula = agb ~ basal_area_centered, data=df)
+summary(lm3.5)
+```
+a) Beta 0 is -113.38. This is what we would expect agb to be when basal area is 0m2. This is not particularly meaningful.
+b) Beta 1 is 18.89. This is means that when basal area increases by 1m2 the average agb is expected to increase by 18.9 Mg/ha
+c) The new value of beta 0 is 410.7, which is the expected abg of samples with average basal area. 
+d) Beta 1 is still 18.89 and is still how much abg is expected to increase with 1m2 increase in basal area. It did not change because we only shifted the center of the graph, we did not change the way abg changed with basal area.
+e) the null hypothesis of no effect can be rejected with a p value of less tha 2e-16
+f)
+```{r, fig.width = 6, fig.height = 4}
+ggplot(df, aes(x = basal_area, y = agb)) +
+ geom_point(shape = 1) +
+   geom_smooth(method = lm, se=F) +
+   xlab(expression(paste("Basal Area, ", m^-2))) +
+   ylab(expression(paste("Above Ground Biomass, Mg ", ha^-1))) +
+  theme_bw()
+```
+
+# Question 4
+```{r}
+lm4 <- lm(formula = agb ~ old_growth+basal_area_centered, data=df)
+summary(lm4)
+```
+a) Beta 0 is 374 which is the average agb in an new growth forest with average basal area. 
+b) Beta 1 is 72.09 the difference in agb between the average new growth and old growth forest.
+c) Beta 2 is 18.0. This represents amount abg changes with each additional m2 of basal area across both old and new growth forests. 
+d)
+```{r, fig.width = 6, fig.height = 4}
+ggplot(df, aes(x = basal_area_centered, y = agb, color=growth)) +
+ geom_point(shape = 1) +
+   geom_abline(intercept=c(363.469, 363.469+93.778),
+               slope=c(18.003,18.003),
+               color=c('coral', 'lightseagreen'))+
+   xlab(expression(paste("Centered Basal Area, ", m^-2))) +
+   ylab(expression(paste("Above Ground Biomass, Mg ", ha^-1))) +
+  theme_bw()
+```
+
+e) This plot does look right based on what I was expecting to plot from this model. The results are reasonable and the regression lines fit the data well. Intuitively, something still feels off about both of the sets having the same slope. It just looks a little too tidy.
+
+# Question 5
+```{r}
+df <- mutate(df, old_basal_area_centered=basal_area_centered*old_growth)
+
+lm5 <- lm(formula = agb ~ old_growth+basal_area_centered+old_basal_area_centered,
+          data=df)
+summary(lm5)
+```
+a) Beta 0 is 373 which is the average abg in new growth forests with average basal area.
+b) Beta 1 is 72 which is how much higher abg is in old growth forests of average basal area than in new growth forests of average basal area. 
+c) Beta 2 is 16.6 which is the expected change in abg for each 1m2 increase in basal area.
+d) Beta 3 is 2.67 which is the adjustment for the slope to account for the difference in the relationship in abg and basal area among old growth forests.
+e)
+```{r, fig.width = 6, fig.height = 4}
+ggplot(df, aes(x = basal_area, y = agb, color=growth)) +
+ geom_point(shape = 1) +
+   geom_smooth(method = lm, se=F) +
+   xlab(expression(paste("Basal Area, ", m^-2))) +
+   ylab(expression(paste("Above Ground Biomass, Mg ", ha^-1))) +
+  theme_bw()
+```
+
+f) Again these results look reasonable and like what I would expect. The regression lines seem to fit the data well. It also fits the data sligtly better than plot 4 and explains far more of the variation than plot 3. 
+
+# Question 6
+```{r}
+df <- mutate(df,
+             ca=if_else(state=="CA", 1, 0),
+             co=if_else(state=="CO", 1, 0),
+             me=if_else(state=="ME", 1, 0),
+             nc=if_else(state=="NC", 1, 0))
+
+
+lm6 <- lm(formula = agb ~ ca+co+me+nc, data=df)
+summary(lm6)
+```
+a) Beta 0 is 411 and this is the expected value of agb in forests in WA.
+b) Beta 1 is 16 and this is the difference in expected value of agb between forests in CA and WA
+c) Beta 2 is -32 and this is the difference in expected value of agb between forests in CO and WA
+d) Beta 3 is 24 and this is the difference in expected value of agb between forests in ME and WA
+e) Beta 4 is -18 and this is the difference in expected value of agb between forests in NC and WA
+f) 
+```{r, fig.width = 6, fig.height = 4}
+ggplot(df, aes(x = state, y = agb, color=state)) +
+ geom_point(shape = 1) +
+   geom_hline(
+     yintercept=c(411.75, 411.75+16.34,411.75-32.11,411.75+24.54,411.75-18.35), 
+     linetype='dashed',
+     color=c('magenta','coral','yellow4', 'lightseagreen','deepskyblue')) +
+   xlab("State") +
+   ylab(expression(paste("Above Ground Biomass, Mg ", ha^-1))) +
+  theme_bw()
+```
+
+g) This plot and model show there are some differences between abg between different states but this difference is not particularly great and could also be explained by just sampling differences instead of an inherent difference in the states.  
