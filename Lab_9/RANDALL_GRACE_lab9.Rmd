@@ -1,0 +1,53 @@
+---
+title: "Lab 8"
+author: "Grace Randall"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+disease_df <-read.csv("~/applied_stats/Applied_stats/Lab_8/disease.csv", header=T)
+```
+
+## Question 1
+```{r}
+fit_1 <- glm(disease ~ 1, family="binomial",data=disease_df)
+summary(fit_1)
+
+
+```
+a) the value of beta 0 is 0.388. This is the log odds of having disease.
+b) the predicted probability of finding the disease is 0.59.
+
+## Question 2
+```{r}
+fit_2 <- glm(disease ~ old, family="binomial",data=disease_df)
+summary(fit_2)
+```
+a) the estimate for beta 0 is 0.705. this is very different from what it was in the previous model. This is the log odds of having disease in a new growth forest.
+b) The probability of the disease in old growth forests is predicted to be 0.534.
+c) The probability of the disease in new growth forests is predicted to be 0.669.
+d) the odds ratio for old growth forest compared to new growth forests is 0.543. this means that the odds of finding disease in an old growth forest are 0.543 times the odds of finding disease in new growth forests.
+e) We can reject the hypothesis of no difference between the old and new growth forests with a p-value of 0.019.
+
+## Question 3
+```{r}
+mean_ba=mean(disease_df$basal_area)
+disease_df <- mutate(disease_df, basal_area_centered=basal_area-mean_ba)
+
+fit_3 <- glm(disease ~ old + basal_area_centered, family="binomial",data=disease_df)
+summary(fit_3)
+```
+a) the odds ratio for basal area is 1.0000796. This means that an increase in basal area of 1m2 will result in the probability of disease being multiplied by 1.0000796.
+b) We fail to reject the null hypothesis of no effect of basal area with a p-value of 0.997.
+
+## Question 4
+```{r}
+fit_4 <- glm(disease ~ old + basal_area + temp_anomaly, family="binomial",data=disease_df)
+summary(fit_4)
+```
+a) the odds ratio for temperature anomalies is 1.618. An increase in the temperature anomaly of 1 results in the odds of disease being multiplied by 1.618.
+b) If I were to be creating a model myself I would absolutely keep in the old vs new growth aspect and the temperature anomoly aspect because both of these are both statistically significant and have a major effect on the odds. I would likely also keep in the basal area because while it does not cause major changes over 1 m2 of change, basal area might have a greater effect over the full range of possible values. I may consider removing it though because it sounds a lot more difficult to measuere so a model may be more applicable if it can predict a little less of the variation but could be applied more due to lower requirements for data availability. 
